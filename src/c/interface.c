@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <bridge.h>
 
 void menu();
 
 
 void menu(){
+
 
     int opcao;
     char titulo[64], autor[64], isbn[20];
@@ -25,7 +27,7 @@ void menu(){
         switch (opcao)
         {
         case 1:
-              printf("Título: ");
+                printf("Título: ");
                 scanf("%63s", titulo);
                 printf("Autor: ");
                 scanf("%63s", autor);
@@ -36,7 +38,7 @@ void menu(){
                 printf("Quantidade: ");
                 scanf("%d", &quantidade);
 
-                insert_book(titulo, autor, isbn, ano, quantidade);
+                cadastro(titulo, autor, isbn, ano, quantidade);
                 break;
         case 2:
             /* code */
