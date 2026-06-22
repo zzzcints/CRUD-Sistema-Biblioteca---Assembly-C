@@ -1,7 +1,7 @@
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
-void cadastro();
+void cadastro(const char *titulo, const char *autor, const char *isbn, int ano, int quantidade);
 void listar();
 void buscar();
 void editar();
