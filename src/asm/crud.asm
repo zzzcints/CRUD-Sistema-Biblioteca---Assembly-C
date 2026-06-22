@@ -1,76 +1,80 @@
 section .bss
-    ; até 100 livros
     books resb 100 * (64 + 64 + 20 + 4 + 4)
     book_count resd 1
 
 section .text
     global inserir
 
-
-
-; Registradores da função de inserção
-
-; rdi = título 
-; rsi = autor 
-; rdx = isbn 
-; rcx = ano 
-; r8d = quantidade 
-
+; -----------------------------------------------------------------------------
+; Inserir livro (cdecl, 32-bit)
+; Parâmetros na pilha:
+; [ebp+8]  = título (char*)
+; [ebp+12] = autor (char*)
+; [ebp+16] = isbn (char*)
+; [ebp+20] = ano (int)
+; [ebp+24] = quantidade (int)
+; -----------------------------------------------------------------------------
 inserir:
-    push rbp
-    mov rbp, rsp
-
+    push ebp
+    mov ebp, esp
 
     mov eax, [book_count]
     cmp eax, 100
-    jge .full   ; Conferir se >100
+    jge .full
 
-    ; Calculando a posição 
-    
-    mov rbx, eax
-    imul rbx, (64+64+20+4+4)
-    lea r9, [books + rbx]   ; ponteiro para início
+    ; calcular posição base
+    mov ebx, eax
+    imul ebx, (64+64+20+4+4)
+    lea edi, [books + ebx]   ; destino
 
     ; copiar título (64 bytes)
-
-    mov rdi, r9             
-    mov rsi, [rbp+16]       
-    mov rcx, 64
+    mov esi, [ebp+8]         ; fonte = título
+    mov ecx, 64
 .copy_title:
-    mov al, [rsi]
-    mov [rdi], al
-    inc rsi
-    inc rdi
+    mov al, [esi]
+    mov [edi], al
+    inc esi
+    inc edi
     loop .copy_title
 
-    ; copiar autor
-
-    mov rsi, [rbp+24]       
-    mov rcx, 64
+    ; copiar autor (64 bytes)
+    mov esi, [ebp+12]
+    mov ecx, 64
 .copy_author:
-    mov al, [rsi]
-    mov [rdi], al
-    inc rsi
-    inc rdi
+    mov al, [esi]
+    mov [edi], al
+    inc esi
+    inc edi
     loop .copy_author
 
-    ; copiar isbn 
-
-    mov rsi, [rbp+32]       
-    mov rcx, 20
+    ; copiar isbn (20 bytes)
+    mov esi, [ebp+16]
+    mov ecx, 20
 .copy_isbn:
-    mov al, [rsi]
-    mov [rdi], al
-    inc rsi
-    inc rdi
+    mov al, [esi]
+    mov [edi], al
+    inc esi
+    inc edi
     loop .copy_isbn
 
-    ; salvar ano 
+    ; salvar ano
+    mov eax, [ebp+20]
+    mov [edi], eax
+    add edi, 4
 
-    mov eax, [rbp+40]
-    mov [rdi], eax
-    add rdi, 4
+    ; salvar quantidade
+    mov eax, [ebp+24]
+    mov [edi], eax
+    add edi, 4
 
-    ; salvar quantidade 
+    ; incrementar contador
+    mov eax, [book_count]
+    inc eax
+    mov [book_count], eax
 
-    mov eax, [rbp+48]
+    jmp .done
+
+.full:
+.done:
+    pop ebp
+    ret

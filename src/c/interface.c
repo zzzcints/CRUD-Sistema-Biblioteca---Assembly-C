@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <bridge.h>
+#include "bridge.h"
 
 void menu();
 
@@ -26,22 +26,36 @@ void menu(){
 
         switch (opcao)
         {
-        case 1:
-                printf("Título: ");
-                scanf("%63s", titulo);
-                printf("Autor: ");
-                scanf("%63s", autor);
-                printf("ISBN: ");
-                scanf("%19s", isbn);
-                printf("Ano: ");
-                scanf("%d", &ano);
-                printf("Quantidade: ");
-                scanf("%d", &quantidade);
+        case 1: {
+            
 
-                cadastro(titulo, autor, isbn, ano, quantidade);
-                break;
+            printf("Título: ");
+            scanf("%63s",titulo);
+            getchar();
+
+            printf("Autor: ");
+            scanf("%63s",autor);
+            getchar();
+
+            printf("ISBN: ");
+            scanf("%63s",isbn);
+            getchar();
+
+            printf("Ano: ");
+            scanf("%d", &ano);
+            getchar(); 
+
+            printf("Quantidade: ");
+            scanf("%d", &quantidade);
+            getchar();
+
+            cadastro(titulo, autor, isbn, ano, quantidade);
+            
+            break;
+        }
+
         case 2:
-            /* code */
+            listar_livros();
             break;
         case 3:
             /* code */
