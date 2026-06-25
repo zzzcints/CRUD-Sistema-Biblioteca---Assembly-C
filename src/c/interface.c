@@ -4,16 +4,16 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "book.h"
+
 
 void menu();
 int ler_inteiro();
-
+void editar(const char *titulo);
 
 void menu(){
 
     int opcao;
-    char titulo[64], autor[64], isbn[20];
-    int ano, quantidade;
     
 
     do{
@@ -32,47 +32,62 @@ void menu(){
 
         switch (opcao)
         {
-        case 1: {
+    case 1: {
+            book novo;
             printf("Título: ");
-            fgets(titulo, sizeof(titulo), stdin);
-            titulo[strcspn(titulo, "\n")] = 0;
+            fgets(novo.titulo, sizeof(novo.titulo), stdin);
+            novo.titulo[strcspn(novo.titulo, "\n")] = 0;
 
             printf("Autor: ");
-            fgets(autor, sizeof(autor), stdin);
-            autor[strcspn(autor, "\n")] = 0;
+            fgets(novo.autor, sizeof(novo.autor), stdin);
+            novo.autor[strcspn(novo.autor, "\n")] = 0;
 
             printf("ISBN: ");
-            fgets(isbn, sizeof(isbn), stdin);
-            isbn[strcspn(isbn, "\n")] = 0;
+            fgets(novo.isbn, sizeof(novo.isbn), stdin);
+            novo.isbn[strcspn(novo.isbn, "\n")] = 0;
 
-            ano = ler_inteiro("Ano: ");
-            quantidade = ler_inteiro("Quantidade: ");
+            novo.ano = ler_inteiro("Ano: ");
+            novo.quantidade = ler_inteiro("Quantidade: ");
 
-            cadastro(titulo, autor, isbn, ano, quantidade);
-        
+            cadastro(novo.titulo, novo.autor, novo.isbn, novo.ano, novo.quantidade);
+
+            salvar_em_arquivo(novo);  
+            printf("Cadastro concluído!\n");
             break;
         }
-        case 2:
+    case 2:
             listar_livros();
             break;
-        case 3: {
-            char titulo[64];
-            printf("Digite o título do livro: ");
-            scanf(" %[^\n]", titulo);
+    case 3: {
+        char titulo[64];
+        printf("Digite o título do livro: ");
+        fgets(titulo, sizeof(titulo), stdin);
+        titulo[strcspn(titulo, "\n")] = 0; 
+        buscar(titulo);                   
+        break;
+    }
 
-            buscar_livro(titulo);   
-            break;
-        }
 
-        case 4:
-            /* code */
+    case 4: {
+        char titulo[64];
+        printf("Digite o título do livro a editar: ");
+        fgets(titulo, sizeof(titulo), stdin);
+        titulo[strcspn(titulo, "\n")] = 0;
+        editar(titulo);
+        break;
+    }
+
+    case 5: {
+        char titulo[64];
+        printf("Digite o título do livro a remover: ");
+        fgets(titulo, sizeof(titulo), stdin);
+        titulo[strcspn(titulo, "\n")] = 0;
+        remover(titulo);
+        break;
+    }
+    default:
             break;
-        case 5:
-            /* code */
-            break;
-        default:
-            break;
-        }
+    }
 
 
     }while (opcao != 0);
@@ -87,7 +102,7 @@ int ler_inteiro(const char *mensagem) {
     while (!valido) {
         printf("%s", mensagem);
         if (fgets(buffer, sizeof(buffer), stdin)) {
-            buffer[strcspn(buffer, "\n")] = 0; // remove \n
+            buffer[strcspn(buffer, "\n")] = 0; 
 
             valido = 1;
             for (int i = 0; buffer[i] != '\0'; i++) {
@@ -107,12 +122,44 @@ int ler_inteiro(const char *mensagem) {
     return valor;
 }
 
+void editar(const char *titulo) {
+    int encontrado = 0;
+    for (int i = 0; i < book_count; i++) {
+        if (strcmp(books[i].titulo, titulo) == 0) {
+            printf("\nLivro encontrado. Informe os novos dados:\n");
+
+            printf("Novo título: ");
+            fgets(books[i].titulo, sizeof(books[i].titulo), stdin);
+            books[i].titulo[strcspn(books[i].titulo, "\n")] = 0;
+
+            printf("Novo autor: ");
+            fgets(books[i].autor, sizeof(books[i].autor), stdin);
+            books[i].autor[strcspn(books[i].autor, "\n")] = 0;
+
+            printf("Novo ISBN: ");
+            fgets(books[i].isbn, sizeof(books[i].isbn), stdin);
+            books[i].isbn[strcspn(books[i].isbn, "\n")] = 0;
+
+            books[i].ano = ler_inteiro("Novo ano: ");
+            books[i].quantidade = ler_inteiro("Nova quantidade: ");
+
+            printf("Livro atualizado com sucesso!\n");
+
+            salvar_todos();
+            encontrado = 1;
+            break;
+        }
+    }
+    if (!encontrado) {
+        printf("\nLivro não encontrado!\n");
+    }
+}
+
+
 
 int main(){
     carregar_arquivo();
     menu();
-    printf("Saindo!! Arquivos salvos.");
-    salvar_em_arquivo();
     return 0;
 }
 

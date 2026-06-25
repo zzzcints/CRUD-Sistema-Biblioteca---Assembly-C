@@ -12,8 +12,6 @@ typedef struct {
 extern Livro books[100];   
 extern int book_count;
 
-// ASM
-extern int buscar(const char *titulo);
 extern void inserir(const char *titulo, const char *autor, const char *isbn, int ano, int quantidade);
 
 // C
@@ -21,6 +19,7 @@ void carregar_arquivo();
 void cadastro();
 void salvar_em_arquivo();
 void listar_livros();
-void buscar_livro(const char *titulo);
+void buscar(const char *titulo);
+void remover(const char *titulo);
 
 #endif
