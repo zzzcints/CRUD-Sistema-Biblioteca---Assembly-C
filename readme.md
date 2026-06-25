@@ -107,7 +107,6 @@ O sistema foi dividido em três camadas principais:
 
 ## Autores
 
-Cíntia Gonçalves Dias
+Cíntia Gonçalves Dias.
 Projeto desenvolvido para a disciplina de Organização de Computadores e Linguagens de Montagem (UFC - Campus Quixadá).
 
-Desenvolvido utilizando C e Assembly x86 (NASM).
