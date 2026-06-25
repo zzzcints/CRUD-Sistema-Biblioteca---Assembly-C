@@ -6,21 +6,16 @@ void cadastro(const char *titulo, const char *autor, const char *isbn, int ano, 
 }
 
 void salvar_em_arquivo() {
-    FILE *f = fopen("livros.txt", "w");
+    FILE *f = fopen("livros.txt", "a");
     if (f) {
         for (int i = 0; i < book_count; i++) {
             printf("book_count = %d\n", book_count);
-
-            fprintf(f,
-                "------------------------------------------------------------\n"
-                "| Título: %s\n"
-                "| Autor: %s\n"
-                "| ISBN: %s\n"
-                "| Ano: %d\n"
-                "| Quantidade: %d\n"
-                "------------------------------------------------------------\n",
-                books[i].titulo, books[i].autor, books[i].isbn,
-                books[i].ano, books[i].quantidade);
+            fprintf(f, "%s\n%s\n%s\n%d\n%d\n",
+                        books[i].titulo,
+                        books[i].autor,
+                        books[i].isbn,
+                        books[i].ano,
+                        books[i].quantidade);
         }
         fclose(f);
     }
@@ -50,6 +45,23 @@ void buscar_livro(const char *titulo) {
     } else {
         printf("Livro não encontrado.\n");
     }
+}
+
+void carregar_arquivo() {
+    FILE *f = fopen("livros.txt", "r");
+    if (!f) return; 
+
+    book_count = 0;
+    while (book_count < 100 &&
+           fscanf(f, "%63[^\n]\n%63[^\n]\n%19[^\n]\n%d\n%d\n",
+                  books[book_count].titulo,
+                  books[book_count].autor,
+                  books[book_count].isbn,
+                  &books[book_count].ano,
+                  &books[book_count].quantidade) == 5) {
+        book_count++;
+    }
+    fclose(f);
 }
 
 

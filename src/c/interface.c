@@ -51,11 +51,6 @@ void menu(){
             cadastro(titulo, autor, isbn, ano, quantidade);
             salvar_em_arquivo();
             break;
-
-
-         cadastro(titulo, autor, isbn, ano, quantidade);
-         salvar_em_arquivo();
-         break;
         }
         case 2:
             listar_livros();
@@ -114,6 +109,7 @@ int ler_inteiro(const char *mensagem) {
 
 
 int main(){
+    carregar_arquivo();
     menu();
     return 0;
 }
