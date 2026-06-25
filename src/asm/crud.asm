@@ -1,19 +1,18 @@
+section .data
+    global book_count
+    book_count dd 0
+
 section .bss
+    global books
     books resb 100 * (64 + 64 + 20 + 4 + 4)
-    book_count resd 1
+
 
 section .text
     global inserir
+    global buscar
+   
 
-; -----------------------------------------------------------------------------
-; Inserir livro (cdecl, 32-bit)
-; Parâmetros na pilha:
-; [ebp+8]  = título (char*)
-; [ebp+12] = autor (char*)
-; [ebp+16] = isbn (char*)
-; [ebp+20] = ano (int)
-; [ebp+24] = quantidade (int)
-; -----------------------------------------------------------------------------
+
 inserir:
     push ebp
     mov ebp, esp
@@ -25,11 +24,11 @@ inserir:
     ; calcular posição base
     mov ebx, eax
     imul ebx, (64+64+20+4+4)
-    lea edi, [books + ebx]   ; destino
+    lea edi, [books + ebx]
 
-    ; copiar título (64 bytes)
-    mov esi, [ebp+8]         ; fonte = título
-    mov ecx, 64
+; copiar título (64 bytes)
+mov esi, [ebp+8]
+mov ecx, 64
 .copy_title:
     mov al, [esi]
     mov [edi], al
@@ -37,9 +36,9 @@ inserir:
     inc edi
     loop .copy_title
 
-    ; copiar autor (64 bytes)
-    mov esi, [ebp+12]
-    mov ecx, 64
+; copiar autor (64 bytes)
+mov esi, [ebp+12]
+mov ecx, 64
 .copy_author:
     mov al, [esi]
     mov [edi], al
@@ -47,15 +46,17 @@ inserir:
     inc edi
     loop .copy_author
 
-    ; copiar isbn (20 bytes)
-    mov esi, [ebp+16]
-    mov ecx, 20
+; copiar ISBN (20 bytes)
+mov esi, [ebp+16]
+mov ecx, 20
 .copy_isbn:
     mov al, [esi]
     mov [edi], al
     inc esi
     inc edi
     loop .copy_isbn
+
+
 
     ; salvar ano
     mov eax, [ebp+20]
@@ -71,10 +72,64 @@ inserir:
     mov eax, [book_count]
     inc eax
     mov [book_count], eax
-
-    jmp .done
-
-.full:
 .done:
     pop ebp
     ret
+.full:
+    pop ebp
+    ret
+
+
+; --- função buscar ---
+buscar:
+    push ebp
+    mov ebp, esp
+
+    mov esi, [ebp+8]        
+    mov ecx, [book_count]   
+    xor eax, eax            
+
+.loop_books:
+    cmp eax, ecx
+    jge .not_found          
+
+    ; calcular posição base do livro i
+    mov ebx, eax
+    imul ebx, (64+64+20+4+4)
+    lea edi, [books + ebx]  
+
+    ; comparar título
+    push ecx                
+    mov ecx, 64             
+.compare_title:
+    mov dl, [esi]
+    mov dh, [edi]
+    cmp dl, dh
+    jne .next_book          
+    cmp dl, 0
+    je .found               
+    inc esi
+    inc edi
+    loop .compare_title
+
+.found:
+    pop ecx
+    ; eax já contém o índice
+    jmp .done
+
+.next_book:
+    pop ecx
+    inc eax                 
+    jmp .loop_books
+
+.not_found:
+    mov eax, -1             
+
+.done:
+    pop ebp
+    ret
+
+
+
+
+
