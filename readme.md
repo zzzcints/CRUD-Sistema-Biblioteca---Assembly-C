@@ -43,14 +43,10 @@ Cada livro possui os seguintes atributos:
 ```text
 .
 ├── build/      # Arquivos de compilação
-├── docs/       # Documentação
-├── scripts/    # Scripts auxiliares
-├── tests/      # Testes
 ├── src/
 │   ├── asm/    # Código Assembly (CRUD)
 │   └── c/      # Interface e integração em C
 ├── makefile    # Compilação do projeto
-└── readme.md   # Documentação principal
 ```
 ---
 
