@@ -49,7 +49,7 @@ void menu(){
             quantidade = ler_inteiro("Quantidade: ");
 
             cadastro(titulo, autor, isbn, ano, quantidade);
-            salvar_em_arquivo();
+        
             break;
         }
         case 2:
@@ -111,6 +111,8 @@ int ler_inteiro(const char *mensagem) {
 int main(){
     carregar_arquivo();
     menu();
+    printf("Saindo!! Arquivos salvos.");
+    salvar_em_arquivo();
     return 0;
 }
 
