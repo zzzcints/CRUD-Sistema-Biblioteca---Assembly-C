@@ -3,6 +3,8 @@
 #include "book.h"
 #include <string.h>
 
+void salvar_todos(void);
+
 
 void cadastro(const char *titulo, const char *autor, const char *isbn, int ano, int quantidade) {
     inserir(titulo, autor, isbn, ano, quantidade);
@@ -38,11 +40,19 @@ void listar_livros() {
     }
 
     char linha[256];
+    int contador = 0;
+
     while (fgets(linha, sizeof(linha), f)) {
         printf("%s", linha);
+        contador++;
+        if (contador % 5 == 0) {
+            printf("\n");
+        }
     }
+
     fclose(f);
 }
+
 
 void buscar(const char *titulo) {
     int encontrado = 0;
@@ -103,7 +113,6 @@ void remover(const char *titulo) {
         printf("\nLivro não encontrado!\n");
     }
 }
-
 
 void salvar_todos() {
     FILE *f = fopen("livros.txt", "w"); 

@@ -10,6 +10,8 @@
 void menu();
 int ler_inteiro();
 void editar(const char *titulo);
+void salvar_todos(void);
+
 
 void menu(){
 
