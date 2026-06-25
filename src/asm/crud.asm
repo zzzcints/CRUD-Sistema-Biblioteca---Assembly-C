@@ -12,7 +12,6 @@ section .text
     global buscar
    
 
-
 inserir:
     push ebp
     mov ebp, esp
@@ -21,12 +20,12 @@ inserir:
     cmp eax, 100
     jge .full
 
-    ; calcular posição base
     mov ebx, eax
     imul ebx, (64+64+20+4+4)
     lea edi, [books + ebx]
 
-; copiar título (64 bytes)
+; copiar título 
+
 mov esi, [ebp+8]
 mov ecx, 64
 .copy_title:
@@ -36,7 +35,8 @@ mov ecx, 64
     inc edi
     loop .copy_title
 
-; copiar autor (64 bytes)
+; copiar autor 
+
 mov esi, [ebp+12]
 mov ecx, 64
 .copy_author:
@@ -46,7 +46,8 @@ mov ecx, 64
     inc edi
     loop .copy_author
 
-; copiar ISBN (20 bytes)
+; copiar ISBN 
+
 mov esi, [ebp+16]
 mov ecx, 20
 .copy_isbn:
@@ -56,19 +57,15 @@ mov ecx, 20
     inc edi
     loop .copy_isbn
 
-
-
     ; salvar ano
     mov eax, [ebp+20]
     mov [edi], eax
     add edi, 4
 
-    ; salvar quantidade
     mov eax, [ebp+24]
     mov [edi], eax
     add edi, 4
 
-    ; incrementar contador
     mov eax, [book_count]
     inc eax
     mov [book_count], eax
