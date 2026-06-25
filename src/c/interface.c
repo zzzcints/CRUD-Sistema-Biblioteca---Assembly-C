@@ -5,13 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "book.h"
-
+#include <ctype.h>
+validar_autor(const char *autor);
 
 void menu();
 int ler_inteiro();
 void editar(const char *titulo);
 void salvar_todos(void);
-
+int validar_isbn(const char *isbn);
+void ler_isbn(char *isbn, int tamanho);
+void ler_autor(char *autor, int tamanho);
+int validar_autor(const char *autor);
 
 void menu(){
 
@@ -43,10 +47,8 @@ void menu(){
             printf("Autor: ");
             fgets(novo.autor, sizeof(novo.autor), stdin);
             novo.autor[strcspn(novo.autor, "\n")] = 0;
-
-            printf("ISBN: ");
-            fgets(novo.isbn, sizeof(novo.isbn), stdin);
-            novo.isbn[strcspn(novo.isbn, "\n")] = 0;
+            ler_autor(novo.autor, sizeof(novo.autor));
+            ler_isbn(novo.isbn, sizeof(novo.isbn));
 
             novo.ano = ler_inteiro("Ano: ");
             novo.quantidade = ler_inteiro("Quantidade: ");
@@ -157,6 +159,54 @@ void editar(const char *titulo) {
     }
 }
 
+int validar_isbn(const char *isbn) {
+    int digitos = 0;
+    for (int i = 0; isbn[i] != '\0'; i++) {
+        if (isdigit(isbn[i])) {
+            digitos++;
+        } else if (isbn[i] != '-') {
+            return 0; 
+        }
+    }
+    return (digitos == 10 || digitos == 13);
+}
+
+void ler_isbn(char *isbn, int tamanho) {
+    do {
+        printf("Digite o ISBN (10 ou 13 dígitos, apenas números e hífens): ");
+        fgets(isbn, tamanho, stdin);
+        isbn[strcspn(isbn, "\n")] = 0;
+
+        if (!validar_isbn(isbn)) {
+            printf("ISBN inválido! Tente novamente.\n");
+        } else {
+            break; // válido → sai do loop
+        }
+    } while (1);
+}
+
+int validar_autor(const char *autor) {
+    for (int i = 0; autor[i] != '\0'; i++) {
+        if (!(isalpha((unsigned char)autor[i]) || isspace((unsigned char)autor[i]))) {
+            return 0; 
+        }
+    }
+    return 1; 
+}
+
+void ler_autor(char *autor, int tamanho) {
+    do {
+        printf("Digite o nome do autor (apenas letras e espaços): ");
+        fgets(autor, tamanho, stdin);
+        autor[strcspn(autor, "\n")] = 0;
+
+        if (!validar_autor(autor)) {
+            printf("Autor inválido! Tente novamente.\n");
+        } else {
+            break; 
+        }
+    } while (1);
+}
 
 
 int main(){
