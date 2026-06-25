@@ -6,7 +6,6 @@
 #include <string.h>
 #include "book.h"
 #include <ctype.h>
-validar_autor(const char *autor);
 
 void menu();
 int ler_inteiro();
@@ -16,6 +15,16 @@ int validar_isbn(const char *isbn);
 void ler_isbn(char *isbn, int tamanho);
 void ler_autor(char *autor, int tamanho);
 int validar_autor(const char *autor);
+
+
+
+int main(){
+    carregar_arquivo();
+    menu();
+    return 0;
+}
+
+
 
 void menu(){
 
@@ -44,9 +53,6 @@ void menu(){
             fgets(novo.titulo, sizeof(novo.titulo), stdin);
             novo.titulo[strcspn(novo.titulo, "\n")] = 0;
 
-            printf("Autor: ");
-            fgets(novo.autor, sizeof(novo.autor), stdin);
-            novo.autor[strcspn(novo.autor, "\n")] = 0;
             ler_autor(novo.autor, sizeof(novo.autor));
             ler_isbn(novo.isbn, sizeof(novo.isbn));
 
@@ -173,14 +179,14 @@ int validar_isbn(const char *isbn) {
 
 void ler_isbn(char *isbn, int tamanho) {
     do {
-        printf("Digite o ISBN (10 ou 13 dígitos, apenas números e hífens): ");
+        printf("Digite o ISBN: ");
         fgets(isbn, tamanho, stdin);
         isbn[strcspn(isbn, "\n")] = 0;
 
         if (!validar_isbn(isbn)) {
             printf("ISBN inválido! Tente novamente.\n");
         } else {
-            break; // válido → sai do loop
+            break; 
         }
     } while (1);
 }
@@ -196,7 +202,7 @@ int validar_autor(const char *autor) {
 
 void ler_autor(char *autor, int tamanho) {
     do {
-        printf("Digite o nome do autor (apenas letras e espaços): ");
+        printf("Digite o nome do autor:");
         fgets(autor, tamanho, stdin);
         autor[strcspn(autor, "\n")] = 0;
 
@@ -209,9 +215,4 @@ void ler_autor(char *autor, int tamanho) {
 }
 
 
-int main(){
-    carregar_arquivo();
-    menu();
-    return 0;
-}
 

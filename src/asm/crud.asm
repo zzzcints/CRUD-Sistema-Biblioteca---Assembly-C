@@ -6,7 +6,6 @@ section .bss
     global books
     books resb 100 * (64 + 64 + 20 + 4 + 4)
 
-
 section .text
     global inserir
     global buscar
