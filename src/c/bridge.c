@@ -53,7 +53,6 @@ void listar_livros() {
     fclose(f);
 }
 
-
 void buscar(const char *titulo) {
     int encontrado = 0;
     for (int i = 0; i < book_count; i++) {

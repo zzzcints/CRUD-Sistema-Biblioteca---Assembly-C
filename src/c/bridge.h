@@ -21,5 +21,6 @@ void salvar_em_arquivo();
 void listar_livros();
 void buscar(const char *titulo);
 void remover(const char *titulo);
+void salvar_todos();
 
 #endif
